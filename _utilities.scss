@@ -8,31 +8,31 @@
 * Font size */
 
 @mixin font-size-utils( $prefix: "" ) {
-  .#{$prefix}fs-xxs { font-size: $font-size-xxs };
-  .#{$prefix}fs-xs  { font-size: $font-size-xs  };
-  .#{$prefix}fs-s   { font-size: $font-size-s   };
-  .#{$prefix}fs-m   { font-size: $font-size-m   };
-  .#{$prefix}fs-l   { font-size: $font-size-l   };
-  .#{$prefix}fs-xl  { font-size: $font-size-xl  };
-  .#{$prefix}fs-xxl { font-size: $font-size-xxl };
+  .#{$prefix}fs\:xxs { font-size: $font-size-xxs };
+  .#{$prefix}fs\:xs  { font-size: $font-size-xs  };
+  .#{$prefix}fs\:s   { font-size: $font-size-s   };
+  .#{$prefix}fs\:m   { font-size: $font-size-m   };
+  .#{$prefix}fs\:l   { font-size: $font-size-l   };
+  .#{$prefix}fs\:xl  { font-size: $font-size-xl  };
+  .#{$prefix}fs\:xxl { font-size: $font-size-xxl };
 }
 @include font-size-utils;
-@include bp-l-or-lower { @include font-size-utils("l\\:"); }
-@include bp-m-or-lower { @include font-size-utils("m\\:"); }
-@include bp-s-or-lower { @include font-size-utils("s\\:"); }
+@include bp-l-or-lower { @include font-size-utils( env-prefix("l") ); }
+@include bp-m-or-lower { @include font-size-utils( env-prefix("m") ); }
+@include bp-s-or-lower { @include font-size-utils( env-prefix("s") ); }
 
 /*----------------------------------------------------------
 * Text align */
 
 @mixin text-align-utils( $prefix: "" ) {
-  .#{$prefix}align-left   { text-align: left   };
-  .#{$prefix}align-center { text-align: center };
-  .#{$prefix}align-right  { text-align: right  };
+  .#{$prefix}align\:left   { text-align: left   };
+  .#{$prefix}align\:center { text-align: center };
+  .#{$prefix}align\:right  { text-align: right  };
 }
 @include text-align-utils;
-@include bp-l-or-lower { @include text-align-utils("l\\:"); }
-@include bp-m-or-lower { @include text-align-utils("m\\:"); }
-@include bp-s-or-lower { @include text-align-utils("s\\:"); }
+@include bp-l-or-lower { @include text-align-utils( env-prefix("l") ); }
+@include bp-m-or-lower { @include text-align-utils( env-prefix("m") ); }
+@include bp-s-or-lower { @include text-align-utils( env-prefix("s") ); }
 
 /*----------------------------------------------------------
 * ETC */
@@ -78,27 +78,27 @@
 * Position */
 
 @mixin position-utils( $prefix: "" ) {
-  .#{$prefix}position-static   { position: static   };
-  .#{$prefix}position-relative { position: relative };
-  .#{$prefix}position-absolute { position: absolute };
+  .#{$prefix}position\:static   { position: static   };
+  .#{$prefix}position\:relative { position: relative };
+  .#{$prefix}position\:absolute { position: absolute };
 }
 @include position-utils;
-@include bp-l-or-lower { @include position-utils("l\\:"); }
-@include bp-m-or-lower { @include position-utils("m\\:"); }
-@include bp-s-or-lower { @include position-utils("s\\:"); }
+@include bp-l-or-lower { @include position-utils( env-prefix("l") ); }
+@include bp-m-or-lower { @include position-utils( env-prefix("m") ); }
+@include bp-s-or-lower { @include position-utils( env-prefix("s") ); }
 
 /*----------------------------------------------------------
 * Float */
 
 @mixin float-utils( $prefix: "" ) {
-  .#{$prefix}float-left  { float: left  };
-  .#{$prefix}float-right { float: right };
-  .#{$prefix}float-none  { float: none  };
+  .#{$prefix}float\:left  { float: left  };
+  .#{$prefix}float\:right { float: right };
+  .#{$prefix}float\:none  { float: none  };
 }
 @include float-utils;
-@include bp-l-or-lower { @include float-utils("l\\:"); }
-@include bp-m-or-lower { @include float-utils("m\\:"); }
-@include bp-s-or-lower { @include float-utils("s\\:"); }
+@include bp-l-or-lower { @include float-utils( env-prefix("l") ); }
+@include bp-m-or-lower { @include float-utils( env-prefix("m") ); }
+@include bp-s-or-lower { @include float-utils( env-prefix("s") ); }
 
 /***********************************************************
 * Visibilities and Display
@@ -112,9 +112,9 @@
   .#{$prefix}display-inlineBlock { display: inline-block };
 }
 @include display-utils;
-@include bp-l-or-lower { @include display-utils("l\\:"); }
-@include bp-m-or-lower { @include display-utils("m\\:"); }
-@include bp-s-or-lower { @include display-utils("s\\:"); }
+@include bp-l-or-lower { @include display-utils( env-prefix("l") ); }
+@include bp-m-or-lower { @include display-utils( env-prefix("m") ); }
+@include bp-s-or-lower { @include display-utils( env-prefix("s") ); }
 
 /*----------------------------------------------------------
 * Visibility */
@@ -124,15 +124,15 @@
   .#{$prefix}visible   { content-visibility: visible; }
 }
 @include visibility-utils;
-@include bp-l-or-lower { @include visibility-utils("l\\:"); }
-@include bp-m-or-lower { @include visibility-utils("m\\:"); }
-@include bp-s-or-lower { @include visibility-utils("s\\:"); }
+@include bp-l-or-lower { @include visibility-utils( env-prefix("l") ); }
+@include bp-m-or-lower { @include visibility-utils( env-prefix("m") ); }
+@include bp-s-or-lower { @include visibility-utils( env-prefix("s") ); }
 
 /*----------------------------------------------------------
 * Opacity */
 
-@for $v from 0 through 9 { .op-#{$v} { opacity: $v * .1 } }
-.op-10 { opacity: 1 }
+@for $v from 0 through 9 { .op\:#{$v} { opacity: $v * .1 } }
+.op\:10 { opacity: 1 }
 
 /*----------------------------------------------------------
 * ETC */
@@ -144,19 +144,19 @@
 ***********************************************************/
 @for $v from 0 through 20 {
   $v: $v * 5;
-  .color-hazy#{ $v } { color: mix($color-text,$color-bg, 100% - $v * 1%) }
-  .bg-hazy#{ $v } { background-color: mix($color-text,$color-bg, 100% - $v * 1%) }
+  .color\:hazy#{ $v } { color: mix($color-text,$color-bg, 100% - $v * 1%) }
+  .bg\:hazy#{ $v } { background-color: mix($color-text,$color-bg, 100% - $v * 1%) }
   @include when-dark-mode {
-    .color-hazy#{ $v } { color: mix($dark-color-text,$dark-color-bg, 100% - $v * 1%) }
-    .bg-hazy#{ $v } { background-color: mix($dark-color-text,$dark-color-bg, 100% - $v * 1%) }
+    .color\:hazy#{ $v } { color: mix($dark-color-text,$dark-color-bg, 100% - $v * 1%) }
+    .bg\:hazy#{ $v } { background-color: mix($dark-color-text,$dark-color-bg, 100% - $v * 1%) }
   }
 }
 
 @for $v from 0 through 20 {
   $v: $v * 5;
   @include when-dark-mode {
-    .dark\:color-hazy#{ $v } { color: mix($dark-color-text,$dark-color-bg, 100% - $v * 1%) }
-    .dark\:bg-hazy#{ $v } { background-color: mix($dark-color-text,$dark-color-bg, 100% - $v * 1%) }
+    .#{env-prefix("dark")}\:color-hazy#{ $v } { color: mix($dark-color-text,$dark-color-bg, 100% - $v * 1%) }
+    .#{env-prefix("dark")}\:bg-hazy#{ $v } { background-color: mix($dark-color-text,$dark-color-bg, 100% - $v * 1%) }
   }
 }
 
@@ -176,7 +176,7 @@
 @include color-classes("info",    var(--color-info));
 @include color-classes("caution", var(--color-caution));
 
-.color-clip {
+.color\:clip {
   color: transparent;
   -webkit-background-clip: text;
 }
@@ -201,6 +201,6 @@
   .#{$prefix}ignorePointerEvents { pointer-events: none };
 }
 @include pointer-events-utils;
-@include bp-l-or-lower { @include pointer-events-utils("l\\:"); }
-@include bp-m-or-lower { @include pointer-events-utils("m\\:"); }
-@include bp-s-or-lower { @include pointer-events-utils("s\\:"); }
+@include bp-l-or-lower { @include pointer-events-utils( env-prefix("l") ); }
+@include bp-m-or-lower { @include pointer-events-utils( env-prefix("m") ); }
+@include bp-s-or-lower { @include pointer-events-utils( env-prefix("s") ); }

@@ -11,3 +11,7 @@
 @function px-to-rem($size, $root-size:16px) {
   @return #{math.div( strip-unit($size), strip-unit($root-size) )}rem
 }
+
+@function env-prefix($name) {
+  @return "\\{#{$name}\\}";
+}

@@ -42,3 +42,15 @@
   font-size: $font-size-m;
   font-family: $font-family-global;
 }
+
+/**********************************************************
+  Box
+**********************************************************/
+%box {
+  @include block-module-all;
+  &.\(flex\) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
