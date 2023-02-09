@@ -2,16 +2,46 @@
 @use "sass:math";
 
 /***********************************************************
+* Generator
+***********************************************************/
+
+@mixin generate-with-responsive-classes {
+  @content("");
+  @include bp-l-or-lower { @content("l") }
+  @include bp-m-or-lower { @content("m") }
+  @include bp-s-or-lower { @content("s") }
+  @include bp-higher-than-l { @content("l\\<\\*") }
+  @include bp-higher-than-m { @content("m\\<\\*") }
+  @include bp-higher-than-s { @content("s\\<\\*") }
+}
+
+@mixin generate-with-theme-classes {
+  @content("");
+  @if $enableSupportDarkMode {
+    @media (prefers-color-scheme: dark) { @content("dark") }
+  }
+}
+
+/***********************************************************
 * Break point
 ***********************************************************/
 @mixin bp-s-or-lower {
-  @media screen and ( max-width: nth($bp-widths, 1) ) { @content }
+  @media screen and ( max-width: $break-point-s ) { @content }
 }
 @mixin bp-m-or-lower {
-  @media screen and ( max-width: nth($bp-widths, 2) ) { @content }
+  @media screen and ( max-width: $break-point-m ) { @content }
 }
 @mixin bp-l-or-lower {
-  @media screen and ( max-width: nth($bp-widths, 3) ) { @content }
+  @media screen and ( max-width: $break-point-l ) { @content }
+}
+@mixin bp-higher-than-s {
+  @media screen and ( min-width: $break-point-s + 1 ) { @content }
+}
+@mixin bp-higher-than-m {
+  @media screen and ( min-width: $break-point-m + 1 ) { @content }
+}
+@mixin bp-higher-than-l {
+  @media screen and ( min-width: $break-point-l + 1 ) { @content }
 }
 
 
@@ -33,7 +63,6 @@
 @mixin container-less-than( $width ) {
   @container ( max-width: #{$width} ) { @content }
 }
-
 @mixin container-more-than( $width ) {
   @container ( max-width: #{$width} ) { @content }
 }
@@ -62,120 +91,111 @@
 /*----------------------------------------------------------
 * Padding */
 
-@mixin block-module-padding( $prefix: "" ) {
-
-  // All
-  @for $s from 1 through 7 {
-    &.#{$prefix}\(padding\:#{ nth($sizes, $s) }\) { padding: nth( $widths, $s ) }
-  }
-
-  // Axis
-  @for $s from 1 through 7 {
-    &.#{$prefix}\(padding-v\:#{ nth($sizes,$s) }\) {
-      padding-top: nth( $widths, $s );
-      padding-bottom: nth( $widths, $s );
+@mixin block-module-padding {
+  @include generate-with-responsive-classes using ($prefix) {
+    // All
+    @each $size, $width in $width-map {
+      &.#{ class-name( "padding", $size, $prefix, true )} { padding: $width; }
     }
-    &.#{$prefix}\(padding-h\:#{ nth($sizes,$s) }\) {
-      padding-left: nth( $widths, $s );
-      padding-right: nth( $widths, $s );
-    }
-  }
 
-  // Direction
-  @each $direction in $directions {
-    $propName: "padding-#{ str-slice($direction,1,1)}";
-    @for $s from 1 through 7 {
-      &.#{$prefix}\(#{$propName}\:#{ nth($sizes, $s) }\) {
-        padding-#{$direction}: nth( $widths, $s );
+    // Axis
+    @each $size, $width in $width-map {
+      &.#{ class-name( "padding-v", $size, $prefix, true )} {
+        padding-top: $width;
+        padding-bottom: $width;
+      }
+      &.#{ class-name( "padding-h", $size, $prefix, true )} {
+        padding-left: $width;
+        padding-right: $width;
       }
     }
-  }
 
-  // Canceler
-  &.#{$prefix}\(padding\:0\) { padding: 0 }
-  &.#{$prefix}\(padding-v\:0\) { padding-top: 0; padding-bottom: 0 }
-  &.#{$prefix}\(padding-h\:0\) { padding-left: 0; padding-right: 0 }
-  &.#{$prefix}\(padding-t\:0\) { padding-top: 0 }
-  &.#{$prefix}\(padding-l\:0\) { padding-left: 0 }
-  &.#{$prefix}\(padding-r\:0\) { padding-right: 0 }
-  &.#{$prefix}\(padding-b\:0\) { padding-bottom: 0 }
+    // Direction
+    @each $direction in $directions {
+      $d: str-slice($direction,1,1);
+      $propName: "padding-#{$d}";
+      @each $size, $width in $width-map {
+        &.#{ class-name( $propName, $size, $prefix, true )} {
+          padding-#{$direction}:$width;
+        }
+      }
+    }
 
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include block-module-padding( env-prefix("l") ) }
-    @include bp-m-or-lower { @include block-module-padding( env-prefix("m") ) }
-    @include bp-s-or-lower { @include block-module-padding( env-prefix("s") ) }
+    // Canceler
+    &.#{ class-name( "padding",   "0", $prefix, true )} { padding: 0 }
+    &.#{ class-name( "padding-v", "0", $prefix, true )} { padding-top: 0; padding-bottom: 0 }
+    &.#{ class-name( "padding-h", "0", $prefix, true )} { padding-left: 0; padding-right: 0 }
+    &.#{ class-name( "padding-t", "0", $prefix, true )} { padding-top: 0 }
+    &.#{ class-name( "padding-l", "0", $prefix, true )} { padding-left: 0 }
+    &.#{ class-name( "padding-r", "0", $prefix, true )} { padding-right: 0 }
+    &.#{ class-name( "padding-b", "0", $prefix, true )} { padding-bottom: 0 }
   }
 }
 
 /*----------------------------------------------------------
 * Margin */
 
-@mixin block-module-margin( $prefix: "" ) {
+@mixin block-module-margin {
+  @include generate-with-responsive-classes using ($prefix) {
 
-  // All
-  @for $s from 1 through 7 {
-    &.#{$prefix}\(margin\:#{ nth($sizes, $s) }\) { margin: nth( $widths, $s ) }
-    &.#{$prefix}\(margin\:-#{ nth($sizes, $s) }\) { margin: nth( $widths, $s ) * -1 }
-  }
+    // All
+    @each $size, $width in $width-map {
+      &.#{ class-name( "marigin", $size, $prefix, true )} { margin: $width }
+      &.#{ class-name( "marigin", "-#{$size}", $prefix, true )} { margin: $width * -1 }
+    }
 
-  // Axis
-  @for $s from 1 through 7 {
-    &.#{$prefix}\(margin-v\:#{ nth($sizes,$s) }\) {
-      margin-top: nth( $widths, $s );
-      margin-bottom: nth( $widths, $s );
-    }
-    &.#{$prefix}\(margin-v\:-#{ nth($sizes,$s) }\) {
-      margin-top: nth( $widths, $s ) * -1;
-      margin-bottom: nth( $widths, $s ) * -1;
-    }
-    &.#{$prefix}\(margin-h\:#{ nth($sizes,$s) }\) {
-      margin-left: nth( $widths, $s );
-      margin-right: nth( $widths, $s );
-    }
-    &.#{$prefix}\(margin-h\:-#{ nth($sizes,$s) }\) {
-      margin-left: nth( $widths, $s ) * -1;
-      margin-right: nth( $widths, $s ) * -1;
-    }
-  }
+    // Axis
+    @each $size, $width in $width-map {
 
-  // Direction
-  @each $direction in $directions {
-    $propName: "margin-#{ str-slice($direction,1,1)}";
-    @for $s from 1 through 7 {
-      &.#{$prefix}\(#{$propName}\:#{ nth($sizes, $s) }\) {
-        margin-#{$direction}: nth( $widths, $s );
+      &.#{ class-name( "margin-v", $size, $prefix, true )} {
+        margin-top: $width;
+        margin-bottom: $width;
       }
-      &.#{$prefix}\(#{$propName}\:-#{ nth($sizes, $s) }\) {
-        margin-#{$direction}: nth( $widths, $s ) * -1;
+      &.#{ class-name( "margin-v", "-#{$size}", $prefix, true )} {
+        margin-top: $width * -1;
+        margin-bottom: $width * -1;
+      }
+      &.#{ class-name( "margin-h", $size, $prefix, true )} {
+        margin-left: $width;
+        margin-right: $width;
+      }
+      &.#{ class-name( "margin-h", "-#{$size}", $prefix, true )} {
+        margin-left: $width * -1;
+        margin-right: $width * -1;
       }
     }
-  }
 
-  // Canceler
-  &.#{$prefix}\(margin\:0\) { margin: 0 }
-  &.#{$prefix}\(margin-v\:0\) { margin-top: 0; margin-bottom: 0 }
-  &.#{$prefix}\(margin-h\:0\) { margin-left: 0; margin-right: 0 }
-  &.#{$prefix}\(margin-t\:0\) { margin-top: 0 }
-  &.#{$prefix}\(margin-l\:0\) { margin-left: 0 }
-  &.#{$prefix}\(margin-r\:0\) { margin-right: 0 }
-  &.#{$prefix}\(margin-b\:0\) { margin-bottom: 0 }
+    // Direction
+    @each $direction in $directions {
+      $d: str-slice($direction,1,1);
+      $propName: "margin-#{$d}";
+      @each $size, $width in $width-map {
+        &.#{ class-name( $propName, $size, $prefix, true )} {
+          margin-#{$direction}: $width;
+        }
+        &.#{ class-name( $propName, "-#{$size}", $prefix, true )} {
+          margin-#{$direction}: $width * -1;
+        }
+      }
+    }
 
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include block-module-margin( env-prefix("l") ) }
-    @include bp-m-or-lower { @include block-module-margin( env-prefix("m") ) }
-    @include bp-s-or-lower { @include block-module-margin( env-prefix("s") ) }
+    // Canceler
+    &.#{ class-name( "margin",   "0", $prefix, true )} { margin: 0 }
+    &.#{ class-name( "margin-v", "0", $prefix, true )} { margin-top: 0; margin-bottom: 0 }
+    &.#{ class-name( "margin-h", "0", $prefix, true )} { margin-left: 0; margin-right: 0 }
+    &.#{ class-name( "margin-t", "0", $prefix, true )} { margin-top: 0 }
+    &.#{ class-name( "margin-l", "0", $prefix, true )} { margin-left: 0 }
+    &.#{ class-name( "margin-r", "0", $prefix, true )} { margin-right: 0 }
+    &.#{ class-name( "margin-b", "0", $prefix, true )} { margin-bottom: 0 }
   }
 }
 
 /*----------------------------------------------------------
 * Sticky */
 
-@mixin block-module-sticky( $prefix: "" ) {
-  &.#{$prefix}\(sticky\) { position: relative }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include block-module-sticky( env-prefix("l") ) }
-    @include bp-m-or-lower { @include block-module-sticky( env-prefix("m") ) }
-    @include bp-s-or-lower { @include block-module-sticky( env-prefix("s") ) }
+@mixin block-module-sticky {
+  @include generate-with-responsive-classes using ($prefix) {
+    &.#{class-name("sticky","",$prefix, true)} { position: relative }
   }
 }
 
@@ -209,63 +229,51 @@
 /*----------------------------------------------------------
 * Direction */
 
-@mixin flex-module-axis( $prefix: "" ) {
-  &.#{$prefix}\(axis\:x\)         { flex-direction: row }
-  &.#{$prefix}\(axis\:reverse-x\) { flex-direction: row-reverse }
-  &.#{$prefix}\(axis\:y\)         { flex-direction: column }
-  &.#{$prefix}\(axis\:reverse-y\) { flex-direction: column-reverse }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include flex-module-axis( env-prefix("l") ) }
-    @include bp-m-or-lower { @include flex-module-axis( env-prefix("m") ) }
-    @include bp-s-or-lower { @include flex-module-axis( env-prefix("s") ) }
+@mixin flex-module-axis {
+  @include generate-with-responsive-classes using ($prefix) {
+    &.#{class-name("axis","x",        $prefix, true)} { flex-direction: row }
+    &.#{class-name("axis","reverse-x",$prefix, true)} { flex-direction: row-reverse }
+    &.#{class-name("axis","y",        $prefix, true)} { flex-direction: column }
+    &.#{class-name("axis","reverse-y",$prefix, true)} { flex-direction: column-reverse }
   }
 }
 
 /*----------------------------------------------------------
 * Gap */
 
-@mixin flex-module-gap( $prefix: "" ) {
-  @for $s from 1 through 7 {
-    &.#{$prefix}\(gap\:#{ nth($sizes, $s) }\) { gap: nth( $widths, $s ) }
-  }
-  &.#{$prefix}\(gap\:0\) { gap: 0 }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include flex-module-gap( env-prefix("l") ) }
-    @include bp-m-or-lower { @include flex-module-gap( env-prefix("m") ) }
-    @include bp-s-or-lower { @include flex-module-gap( env-prefix("s") ) }
+@mixin flex-module-gap {
+  @include generate-with-responsive-classes using ($prefix) {
+    @each $size, $width in $width-map {
+      &.#{class-name("gap",$size,$prefix, true)} { gap: $width }
+    }
+    &.#{class-name("gap","0",$prefix, true)} { gap: 0 }
   }
 }
 
 /*----------------------------------------------------------
 * JustifyContent */
 
-@mixin flex-module-justify( $prefix: "" ) {
-  &.#{$prefix}\(justify\:left\)   { justify-content: flex-start }
-  &.#{$prefix}\(justify\:center\) { justify-content: center }
-  &.#{$prefix}\(justify\:right\)  { justify-content: flex-end }
-  &.#{$prefix}\(justify\:start\)  { justify-content: flex-start }
-  &.#{$prefix}\(justify\:end\)    { justify-content: flex-end }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include flex-module-justify( env-prefix("l") ) }
-    @include bp-m-or-lower { @include flex-module-justify( env-prefix("m") ) }
-    @include bp-s-or-lower { @include flex-module-justify( env-prefix("s") ) }
+@mixin flex-module-justify {
+  @include generate-with-responsive-classes using ($prefix) {
+    &.#{class-name("justify", "left",   $prefix, true)} { justify-content: flex-start }
+    &.#{class-name("justify", "center", $prefix, true)} { justify-content: center }
+    &.#{class-name("justify", "right",  $prefix, true)} { justify-content: flex-end }
+    &.#{class-name("justify", "start",  $prefix, true)} { justify-content: flex-start }
+    &.#{class-name("justify", "end",    $prefix, true)} { justify-content: flex-end }
   }
 }
 
 /*----------------------------------------------------------
 * AlignItems */
 
-@mixin flex-module-align( $prefix: "" ) {
-  &.#{$prefix}\(align\:top\)     { align-items: start }
-  &.#{$prefix}\(align\:center\)  { align-items: center }
-  &.#{$prefix}\(align\:bottom\)  { align-items: end }
-  &.#{$prefix}\(align\:stretch\) { align-items: stretch }
-  &.#{$prefix}\(align\:start\)   { align-items: start }
-  &.#{$prefix}\(align\:end\)     { align-items: end }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include flex-module-align( env-prefix("l") ) }
-    @include bp-m-or-lower { @include flex-module-align( env-prefix("m") ) }
-    @include bp-s-or-lower { @include flex-module-align( env-prefix("s") ) }
+@mixin flex-module-align {
+  @include generate-with-responsive-classes using ($prefix) {
+    &.#{class-name("align", "top",     $prefix, true)} { align-items: start }
+    &.#{class-name("align", "center",  $prefix, true)} { align-items: center }
+    &.#{class-name("align", "bottom",  $prefix, true)} { align-items: end }
+    &.#{class-name("align", "stretch", $prefix, true)} { align-items: stretch }
+    &.#{class-name("align", "start",   $prefix, true)} { align-items: start }
+    &.#{class-name("align", "end",     $prefix, true)} { align-items: end }
   }
 }
 
@@ -278,44 +286,51 @@
   @include stick-module-direction;
 }
 
-@mixin stick-module-direction( $prefix: "" ) {
-  &.#{$prefix}\(vertical\)   { top: 0; bottom: 0 }
-  &.#{$prefix}\(horizontal\) { left: 0; right: 0 }
-  @each $direction in $directions {
-    &.#{$prefix}\(#{$direction}\) { #{$direction}: 0 }
-  }
-  &.#{$prefix}\(parent\) { top: 0; left: 0; right: 0; bottom: 0 }
+@mixin stick-module-direction {
+  @include generate-with-responsive-classes using ($prefix) {
 
-  $keys: "inset", "offset";
-  @each $key in $keys {
-    $n: 1;
-    @if $key == "offset" { $n: -1 }
-    @for $s from 1 through 7 {
-      &.#{$prefix}\(#{$key}-v:#{ nth($sizes, $s) }\)   {
-        top: nth( $widths, $s ) * $n;
-        bottom: nth( $widths, $s ) * $n;
-      }
-      &.#{$prefix}\(#{$key}-h\:#{ nth($sizes, $s) }\) {
-        left: nth( $widths, $s ) * $n;
-        right: nth( $widths, $s ) * $n;
-      }
-      @each $direction in $directions {
-        &.#{$prefix}\(#{$key}-#{ str-slice($direction,1,1)}\:#{ nth($sizes, $s) }\) {
-          #{$direction}: nth( $widths, $s ) * $n
+    &.#{class-name("vertical",   "", $prefix, true)} { top: 0; bottom: 0 }
+    &.#{class-name("horizontal", "", $prefix, true)} { left: 0; right: 0 }
+
+    @each $direction in $directions {
+      &.#{class-name($direction, "", $prefix, true)} { #{$direction}: 0 }
+    }
+
+    &.#{class-name("parent", "", $prefix, true)} {
+      top: 0; left: 0; right: 0; bottom: 0
+    }
+
+    $keys: "inset", "offset";
+    @each $key in $keys {
+      $n: 1;
+      @if $key == "offset" { $n: -1 }
+
+      @each $size, $width in $width-map {
+
+        &.#{class-name("#{$key}-v", $size, $prefix, true)} {
+          top: $width * $n;
+          bottom: $width * $n;
+        }
+        &.#{class-name("#{$key}-h", $size, $prefix, true)} {
+          left: $width * $n;
+          right: $width * $n;
+        }
+
+        @each $direction in $directions {
+          $d: str-slice($direction,1,1);
+          $propName: "#{$key}-#{$d}";
+          &.#{class-name( $propName, $size, $prefix, true)} {
+            #{$direction}: $width * $n
+          }
+        }
+        &.#{class-name("#{$key}-parent", $size, $prefix, true)} {
+          top: $width * $n;
+          left: $width * $n;
+          right: $width * $n;
+          bottom: $width * $n;
         }
       }
-      &.#{$prefix}\(#{$key}-parent\:#{ nth($sizes, $s) }\) {
-        top: nth( $widths, $s ) * $n;
-        left: nth( $widths, $s ) * $n;
-        right: nth( $widths, $s ) * $n;
-        bottom: nth( $widths, $s ) * $n;
-      }
     }
-  }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include stick-module-direction( env-prefix("l") ) }
-    @include bp-m-or-lower { @include stick-module-direction( env-prefix("m") ) }
-    @include bp-s-or-lower { @include stick-module-direction( env-prefix("s") ) }
   }
 }
 
@@ -327,32 +342,26 @@
   max-width: $size;
 }
 
-@mixin width-module( $name, $size, $prefix: "" ) {
-  .#{$prefix}w\:#{$name} {
-    min-width: $size;
-    max-width: $size;
-  }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include width-module($name, $size, env-prefix("l") ) }
-    @include bp-m-or-lower { @include width-module($name, $size, env-prefix("m") ) }
-    @include bp-s-or-lower { @include width-module($name, $size, env-prefix("s") ) }
+@mixin width-module( $name, $size ) {
+  @include generate-with-responsive-classes using ($prefix) {
+    .#{class-name("w", $name, $prefix)} {
+      min-width: $size;
+      max-width: $size;
+    }
   }
 }
 
-@mixin width-classes( $unitClassName, $min: 1, $max: 10, $scale: 1, $prefix: "" ) {
-  $unit: $unitClassName;
-  @if( $unitClassName == "percent" or $unitClassName == "per" ) {
-    $unit: "%";
-  }
-  @for $i from $min through $max {
-    .#{$prefix}w\:#{$i * $scale}#{$unitClassName} {
-      @include width( unquote(($i * $scale) + $unit) );
+@mixin width-classes( $unitClassName, $min: 1, $max: 10, $scale: 1 ) {
+  @include generate-with-responsive-classes using ($prefix) {
+    $unit: $unitClassName;
+    @if( $unitClassName == "percent" or $unitClassName == "per" ) {
+      $unit: "%";
     }
-  }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include width-classes($unitClassName, $min, $max, $scale, env-prefix("l") ) }
-    @include bp-m-or-lower { @include width-classes($unitClassName, $min, $max, $scale, env-prefix("m") ) }
-    @include bp-s-or-lower { @include width-classes($unitClassName, $min, $max, $scale, env-prefix("s") ) }
+    @for $i from $min through $max {
+      .#{class-name("w","#{$i*$scale}#{$unitClassName}", $prefix)} {
+        @include width( unquote(($i * $scale) + $unit) );
+      }
+    }
   }
 }
 
@@ -364,33 +373,26 @@
   max-height: $size;
 }
 
-@mixin height-module( $name, $size, $prefix: "" ) {
-  .#{$prefix}h\:#{$name} {
-    min-height: $size;
-    max-height: $size;
-  }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include height-module($name, $size, env-prefix("l") ) }
-    @include bp-m-or-lower { @include height-module($name, $size, env-prefix("m") ) }
-    @include bp-s-or-lower { @include height-module($name, $size, env-prefix("s") ) }
+@mixin height-module( $name, $size ) {
+  @include generate-with-responsive-classes using ($prefix) {
+    .#{class-name("h", $name, $prefix)} {
+      min-height: $size;
+      max-height: $size;
+    }
   }
 }
 
-
-@mixin height-classes( $unitClassName, $min: 1, $max: 10, $scale: 1, $prefix: "" ) {
-  $unit: $unitClassName;
-  @if( $unitClassName == "percent" or $unitClassName == "per" ) {
-    $unit: "%";
-  }
-  @for $i from $min through $max {
-    .#{$prefix}h\:#{$i * $scale}#{$unitClassName} {
-      @include height( unquote(($i * $scale) + $unit) );
+@mixin height-classes( $unitClassName, $min: 1, $max: 10, $scale: 1 ) {
+  @include generate-with-responsive-classes using ($prefix) {
+    $unit: $unitClassName;
+    @if( $unitClassName == "percent" or $unitClassName == "per" ) {
+      $unit: "%";
     }
-  }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include height-classes($unitClassName, $min, $max, $scale, env-prefix("l") ) }
-    @include bp-m-or-lower { @include height-classes($unitClassName, $min, $max, $scale, env-prefix("m") ) }
-    @include bp-s-or-lower { @include height-classes($unitClassName, $min, $max, $scale, env-prefix("s") ) }
+    @for $i from $min through $max {
+      .#{class-name("h","#{$i*$scale}#{$unitClassName}", $prefix)} {
+        @include height( unquote(($i * $scale) + $unit) );
+      }
+    }
   }
 }
 
@@ -452,19 +454,16 @@
 /***********************************************************
 * clamp classes
 ***********************************************************/
-@mixin clamp-classes($min,$max, $prefix: "" ) {
-  @for $line from $min through $max {
-    .#{$prefix}clamp\:#{$line} {
-      display: -webkit-box;
-      -webkit-line-clamp: $line;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+@mixin clamp-classes($min,$max) {
+  @include generate-with-responsive-classes using ($prefix) {
+    @for $line from $min through $max {
+      .#{class-name("clamp","#{$line}", $prefix)} {
+        display: -webkit-box;
+        -webkit-line-clamp: $line;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
     }
-  }
-  @if( $prefix == "" ) {
-    @include bp-l-or-lower { @include clamp-classes($min, $max, env-prefix("l") ) }
-    @include bp-m-or-lower { @include clamp-classes($min, $max, env-prefix("m") ) }
-    @include bp-s-or-lower { @include clamp-classes($min, $max, env-prefix("s") ) }
   }
 }
 
@@ -472,13 +471,11 @@
 * Color-classes
 ***********************************************************/
 @mixin color-classes( $name, $color, $prefix: "" ) {
-  .#{$prefix}color\:#{$name} {
+  .#{class-name("color", $name, $prefix)} {
     color: $color;
   }
-  .#{$prefix}bg\:#{$name} {
+  .#{class-name("bg", $name, $prefix)} {
     background-color: $color;
   }
-  @if( $prefix == "" ) {
-    @include when-dark-mode { @include color-classes($name, $color, env-prefix("dark") ) }
-  }
 }
+

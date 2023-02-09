@@ -11,10 +11,9 @@
 @include width-classes("per",1,100,1);
 @include width-classes("em",1,20,1);
 
-.w\:unset { @include width( unset ) }
-@include bp-l-or-lower { .#{env-prefix("l")}w\:unset { @include width( unset ) } }
-@include bp-m-or-lower { .#{env-prefix("m")}w\:unset { @include width( unset ) } }
-@include bp-s-or-lower { .#{env-prefix("s")}w\:unset { @include width( unset ) } }
+@include generate-with-responsive-classes using ($prefix) {
+  .#{class-name("w", "unset", $prefix)} { @include width(unset) }
+}
 
 /***********************************************************
 * Height
@@ -23,14 +22,15 @@
 @include height-classes("per",1,100,1);
 @include height-classes("em",1,20,1);
 
-.h\:unset { @include height( unset ) }
-@include bp-l-or-lower { .#{env-prefix("l")}h\:unset { @include height( unset ) } }
-@include bp-m-or-lower { .#{env-prefix("m")}h\:unset { @include height( unset ) } }
-@include bp-s-or-lower { .#{env-prefix("s")}h\:unset { @include height( unset ) } }
+@include generate-with-responsive-classes using ($prefix) {
+  .#{class-name("h", "unset", $prefix)} { @include height(unset) }
+}
 
 /***********************************************************
 * Aspect
 ***********************************************************/
-.aspect\:16x9 { @include aspect(16,9) }
-.aspect\:4x3  { @include aspect(4,3)  }
-.aspect\:1x1  { @include aspect(1,1)  }
+@include generate-with-responsive-classes using ($prefix) {
+  .#{class-name("aspect", "16x9", $prefix)} { @include aspect(16,9) }
+  .#{class-name("aspect", "4x3",  $prefix)} { @include aspect(4,3) }
+  .#{class-name("aspect", "1x1",  $prefix)} { @include aspect(1,1) }
+}

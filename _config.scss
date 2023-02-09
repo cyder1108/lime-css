@@ -2,22 +2,29 @@
 
 $directions: top, left, right, bottom;
 
-$enableSupportDarkMode: false;
+$enableSupportDarkMode: true;
 
 /**********************************************************
   幅
 **********************************************************/
-$sizes:  xxs, xs,   s,    m,    l,    xl,  xxl;
-$widths: 5px, 10px, 20px, 30px, 40px, 50px, 70px;
+$width-map: (
+  "xxs":  5px,
+  "xs":  10px,
+  "s":   20px,
+  "m":   30px,
+  "l":   40px,
+  "xl":  50px,
+  "xxl": 70px
+);
 
 $width-global: 1080px;
-$width-xxs: nth( $widths, 1 );
-$width-xs:  nth( $widths, 2 );
-$width-s:   nth( $widths, 3 );
-$width-m:   nth( $widths, 4 );
-$width-l:   nth( $widths, 5 );
-$width-xl:  nth( $widths, 6 );
-$width-xxl: nth( $widths, 7 );
+$width-xxs: map-get( $width-map, "xxs" );
+$width-xs:  map-get( $width-map, "xs"  );
+$width-s:   map-get( $width-map, "s"   );
+$width-m:   map-get( $width-map, "m"   );
+$width-l:   map-get( $width-map, "l"   );
+$width-xl:  map-get( $width-map, "xl"  );
+$width-xxl: map-get( $width-map, "xxl" );
 
 
 /**********************************************************
@@ -79,9 +86,7 @@ $font-size-xxl: px-to-rem(24px,$font-size-global);
 /**********************************************************
   ブレークポイント
 **********************************************************/
-$bp-sizes: s,      m,     l;
-$bp-widths: 599px, 1024px, 1100px;
-$break-point-s: nth( $bp-widths, 1 );
-$break-point-m: nth( $bp-widths, 2 );
-$break-point-l: nth( $bp-widths, 3 );
+$break-point-s: 599px;
+$break-point-m: 1024px;
+$break-point-l: 1100px;
 
