@@ -4,14 +4,9 @@
   root
 ***********************************************************/
 :root {
-  --width-xxs: #{$width-xxs};
-  --width-xs: #{$width-xs};
-  --width-s: #{$width-s};
-  --width-m: #{$width-m};
-  --width-l: #{$width-l};
-  --width-xl: #{$width-xl};
-  --width-xxl: #{$width-xxl};
-
+  @each $size, $width in $width-map {
+    --width-#{$size}: #{$width};
+  }
 
   --color-black: #{$color-black};
   --color-white: #{$color-white};
@@ -33,13 +28,9 @@
   --line-height-sentence: #{$line-height-sentence};
 
   --font-size-global: #{$font-size-global};
-  --font-size-xxs: #{$font-size-xxs};
-  --font-size-xs: #{$font-size-xs};
-  --font-size-s: #{$font-size-s};
-  --font-size-m: #{$font-size-m};
-  --font-size-l: #{$font-size-l};
-  --font-size-xl: #{$font-size-xl};
-  --font-size-xxl: #{$font-size-xxl};
+  @each $size, $font-size in $font-size-map {
+    --font-size-#{$size}: #{$font-size};
+  }
 
   @include when-dark-mode {
     --color-main: #{$dark-color-main};

@@ -10,9 +10,11 @@
   @include bp-l-or-lower { @content("l") }
   @include bp-m-or-lower { @content("m") }
   @include bp-s-or-lower { @content("s") }
+  /*
   @include bp-higher-than-l { @content("l\\<\\*") }
   @include bp-higher-than-m { @content("m\\<\\*") }
   @include bp-higher-than-s { @content("s\\<\\*") }
+  */
 }
 
 @mixin generate-with-theme-classes {

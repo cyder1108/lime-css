@@ -139,7 +139,7 @@
   @include color-classes("anchor",  var(--color-anchor),  $prefix);
   @include color-classes("border",  var(--color-border),  $prefix);
 
-  @include color-classes("danger",  var(--color-danger)   $prefix);
+  @include color-classes("danger",  var(--color-danger),  $prefix);
   @include color-classes("success", var(--color-success), $prefix);
   @include color-classes("info",    var(--color-info),    $prefix);
   @include color-classes("caution", var(--color-caution), $prefix);

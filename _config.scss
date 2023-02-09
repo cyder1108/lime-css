@@ -31,17 +31,19 @@ $width-xxl: map-get( $width-map, "xxl" );
   色
 **********************************************************/
 // Common
-$color-black: #111;
+$color-black: #000;
 $color-white: #fff;
+$color-mild-black: #333;
+$color-mild-white: #ddd;
 
 // Light Mode
 $color-main: #5af;
 $color-accent: darken(#31c4bd,5%);
 
-$color-text: #333;
+$color-text: $color-mild-black;
 $color-bg: $color-white;
 $color-anchor: #0af;
-$color-border: #ddd;
+$color-border: $color-mild-white;
 
 $color-danger: darken(#d66,4%);
 $color-success: desaturate(lighten(green,20%),50%);
@@ -52,10 +54,10 @@ $color-caution: saturate(darken(mix(orange,orange),9%),50%);
 $dark-color-main: lighten($color-main, 5%);
 $dark-color-accent: lighten($color-accent,5%);
 
-$dark-color-text: #ccc;
+$dark-color-text: $color-mild-white;
 $dark-color-bg: $color-black;
 $dark-color-anchor: lighten($color-anchor, 5%);
-$dark-color-border: #333;
+$dark-color-border: $color-mild-black;
 
 $dark-color-danger: lighten($color-danger, 5%);
 $dark-color-success: lighten($color-success, 5%);
@@ -75,6 +77,15 @@ $line-height-sentence: 1.7;
 $font-family-global: sans-serif;
 
 $font-size-global: 16px;
+$font-size-map: (
+  "xxs":  10px,
+  "xs":   12px,
+  "s":    14px,
+  "m":    16px,
+  "l":    18px,
+  "xl":   20px,
+  "xxl":  24px
+);
 $font-size-xxs: px-to-rem(10px,$font-size-global);
 $font-size-xs: px-to-rem(12px,$font-size-global);
 $font-size-s: px-to-rem(14px,$font-size-global);
